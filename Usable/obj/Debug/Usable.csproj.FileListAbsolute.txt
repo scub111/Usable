@@ -1,0 +1,10 @@
+D:\Мои документы\!Projects\Usable\Usable\bin\Debug\Usable.dll
+D:\Мои документы\!Projects\Usable\Usable\bin\Debug\Usable.pdb
+D:\Мои документы\!Projects\Usable\Usable\obj\Debug\Usable.csprojResolveAssemblyReference.cache
+D:\Мои документы\!Projects\Usable\Usable\obj\Debug\Usable.dll
+D:\Мои документы\!Projects\Usable\Usable\obj\Debug\Usable.pdb
+D:\_Projects\Usable\Usable\bin\Debug\Usable.dll
+D:\_Projects\Usable\Usable\bin\Debug\Usable.pdb
+D:\_Projects\Usable\Usable\obj\Debug\Usable.csprojResolveAssemblyReference.cache
+D:\_Projects\Usable\Usable\obj\Debug\Usable.dll
+D:\_Projects\Usable\Usable\obj\Debug\Usable.pdb
