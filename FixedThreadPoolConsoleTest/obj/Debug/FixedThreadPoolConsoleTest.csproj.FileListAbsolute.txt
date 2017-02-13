@@ -1,0 +1,8 @@
+D:\_Projects\Usable\FixedThreadPoolConsoleTest\bin\Debug\FixedThreadPoolConsoleTest.exe.config
+D:\_Projects\Usable\FixedThreadPoolConsoleTest\bin\Debug\FixedThreadPoolConsoleTest.exe
+D:\_Projects\Usable\FixedThreadPoolConsoleTest\bin\Debug\FixedThreadPoolConsoleTest.pdb
+D:\_Projects\Usable\FixedThreadPoolConsoleTest\bin\Debug\Usable.dll
+D:\_Projects\Usable\FixedThreadPoolConsoleTest\bin\Debug\Usable.pdb
+D:\_Projects\Usable\FixedThreadPoolConsoleTest\obj\Debug\FixedThreadPoolConsoleTest.csprojResolveAssemblyReference.cache
+D:\_Projects\Usable\FixedThreadPoolConsoleTest\obj\Debug\FixedThreadPoolConsoleTest.exe
+D:\_Projects\Usable\FixedThreadPoolConsoleTest\obj\Debug\FixedThreadPoolConsoleTest.pdb

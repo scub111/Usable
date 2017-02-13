@@ -51,6 +51,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Classes\FixedThreadPoolTests.cs" />
     <Compile Include="Classes\ThreadExTests.cs" />
     <Compile Include="Classes\ThreadTimerTests.cs" />
     <Compile Include="Classes\TriggerTTests.cs" />
