@@ -85,6 +85,7 @@ namespace Usable
             tasks = new List<TaskEx>();
             lockFind = new object();
             highCount = 0;
+            Stoping = false;
             for (int i = 0; i < threadCount; i++)
             {
                 pool[i] = new Thread(ThreadEngine) { Name = string.Format("Pool thread #{0}", i), IsBackground = true };
@@ -121,6 +122,11 @@ namespace Usable
         /// Счетчик выполненных задач с высоким приоритетом.
         /// </summary>
         private int highCount;
+
+        /// <summary>
+        /// Останавливает работу пул потоков.
+        /// </summary>
+        public bool Stoping { get; private set; }
 
         /// <summary>
         /// Механизм выполнения задач.
@@ -184,12 +190,28 @@ namespace Usable
             }
         }
 
-
-        public void Execute(Action action, TaskPriorityEx priority = TaskPriorityEx.LOW)
+        public void Stop()
         {
-            TaskEx taskEx = new TaskEx(action, priority);
-            tasks.Add(taskEx);
-            waitHandle.Set();
+            Stoping = true;
+        }
+
+        /// <summary>
+        /// Выполнение то или иной задачи.
+        /// </summary>
+        /// <param name="action">Задача</param>
+        /// <param name="priority">Приоритет</param>
+        /// <returns>Поставлена задача в очередь</returns>
+        public bool Execute(Action action, TaskPriorityEx priority = TaskPriorityEx.LOW)
+        {
+            if (!Stoping)
+            {
+                TaskEx taskEx = new TaskEx(action, priority);
+                tasks.Add(taskEx);
+                waitHandle.Set();
+                return true;
+            }
+            else
+                return false;
         }
     }
 }
