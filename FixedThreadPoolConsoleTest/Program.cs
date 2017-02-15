@@ -14,9 +14,7 @@ namespace FixedThreadPoolConsoleTest
         {
             FixedThreadPool pool = new FixedThreadPool(1);
 
-            TaskEx task = new TaskEx(() => { Console.WriteLine("test"); Thread.Sleep(1000); });
-
-            pool.Execute(task);
+            pool.Execute(() => { Console.WriteLine("test"); Thread.Sleep(1000); });
 
             Thread.Sleep(10000);
 
