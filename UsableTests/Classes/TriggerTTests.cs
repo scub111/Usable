@@ -9,16 +9,16 @@ namespace Usable.Tests
         public void CalculateRet_Bool()
         {
             TriggerT<bool> trigger = new TriggerT<bool>();
-            trigger.CalculateRet(true);
-            Assert.IsTrue(trigger.CalculateRet(false));
+            trigger.Calculate(true);
+            Assert.IsTrue(trigger.Calculate(false));
         }
 
         [TestMethod()]
         public void CalculateRet_Int()
         {
             TriggerT<int> trigger = new TriggerT<int>();
-            trigger.CalculateRet(6);
-            Assert.IsTrue(trigger.CalculateRet(5));
+            trigger.Calculate(6);
+            Assert.IsTrue(trigger.Calculate(5));
         }
     }
 }

@@ -213,7 +213,7 @@ namespace Usable.Tests
                         int normalStCp = normalStep;
 
                         if (normalStCp < 30)
-                            if (trgNormal.CalculateRet(normalStep))
+                            if (trgNormal.Calculate(normalStep))
                             {
                                 result.Add(() =>
                                 {

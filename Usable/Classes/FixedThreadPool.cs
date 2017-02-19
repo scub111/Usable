@@ -7,7 +7,7 @@ using System.Threading;
 namespace Usable
 {
     /// <summary>
-    /// Приоритет потока.
+    /// Приоритет задачи.
     /// </summary>
     public enum TaskPriorityEx
     {
@@ -15,6 +15,17 @@ namespace Usable
         HIGH = 3,   //Высокий.
         NORMAL = 1, //Нормальный.
         LOW = 0     //Низкий.
+    }
+
+    /// <summary>
+    /// Статус выполнения задачи.
+    /// </summary>
+    public enum TaskStatus
+    {
+        Whaiting,   //В ожидании
+        Running,    //Запущен.            
+        Finished,   //Завершен.
+        Aborted     //Прекращен.
     }
 
     /// <summary>
@@ -31,7 +42,7 @@ namespace Usable
         {
             this.action = action;
             Priority  = priority;
-            Executing = false;
+            Status = TaskStatus.Whaiting;
             Tried = false;
         }
 
@@ -46,9 +57,9 @@ namespace Usable
         public TaskPriorityEx Priority { get; private set; }
 
         /// <summary>
-        /// Выполняется ли задача.
+        /// Статус задача.
         /// </summary>
-        public bool Executing { get; private set; }
+        public TaskStatus Status { get; private set; }
 
         /// <summary>
         /// Пытались ли выполнить задачу. 
@@ -60,11 +71,16 @@ namespace Usable
         /// </summary>
         public void Execute()
         {
-            lock (this)
+            Status = TaskStatus.Running;
+            try
             {
-                Executing = true;
+                action();
+                Status = TaskStatus.Finished;
             }
-            action();
+            catch
+            {
+                Status = TaskStatus.Aborted;
+            }
         }
     }
 
@@ -86,6 +102,7 @@ namespace Usable
             lockFind = new object();
             highCount = 0;
             Stoping = false;
+            Cleared = false;
             for (int i = 0; i < threadCount; i++)
             {
                 pool[i] = new Thread(ThreadEngine) { Name = string.Format("Pool thread #{0}", i), IsBackground = true };
@@ -129,29 +146,59 @@ namespace Usable
         public bool Stoping { get; private set; }
 
         /// <summary>
+        /// Общее количество задач.
+        /// </summary>
+        public int TaskCount  { get { return tasks.Count(); } }
+
+        /// <summary>
+        /// Собыите на завершение обработки.
+        /// </summary>
+        public event EventHandler Finished = delegate { };
+
+        /// <summary>
+        /// Очищен ли список.
+        /// </summary>
+        private bool Cleared; 
+
+        /// <summary>
+        /// Количество выполненных задач.
+        /// </summary>
+        public int ExecutedCount
+        {
+            get
+            {
+                return tasks.Where(item => item.Status == TaskStatus.Finished || 
+                                            item.Status == TaskStatus.Aborted).Count();
+            }
+        }
+
+        /// <summary>
         /// Механизм выполнения задач.
         /// </summary>
         private void ThreadEngine()
         {
             while (true)
             {
+                Stoping = false;
                 waitHandle.WaitOne();
-                //Console.WriteLine(string.Format("Thread Id={0} cycling...", Thread.CurrentThread.ManagedThreadId));
-                TaskEx task = FindNewTask();
+                TaskEx task = FindTask();
                 if (task != null)
-                {
                     task.Execute();
-                    //Console.WriteLine(string.Format("Thread Id={0} executed", Thread.CurrentThread.ManagedThreadId));
-                }
                 else
                     waitHandle.Reset();
+
+                if (ExecutedCount == TaskCount)
+                {
+                    Finished(this, EventArgs.Empty);
+                    Cleared = false;
+                }
             }
         }
 
         /// <summary>
         /// Поиск невыполненной задачи.
         /// </summary>
-        private TaskEx FindNewTask()
+        private TaskEx FindTask()
         {
             lock (lockFind)
             {
@@ -193,6 +240,25 @@ namespace Usable
         public void Stop()
         {
             Stoping = true;
+            ClearTasks(true);
+            waitHandle.Reset();
+        }
+
+        /// <summary>
+        /// Очистака списка задач.
+        /// </summary>
+        /// <param name="force"></param>
+        private void ClearTasks(bool force = false)
+        {
+            lock (lockFind)
+            {
+                if (!Cleared || force)
+                    if (ExecutedCount == TaskCount || force)
+                    {
+                        tasks.Clear();
+                        Cleared = true;
+                    }
+            }
         }
 
         /// <summary>
@@ -205,6 +271,8 @@ namespace Usable
         {
             if (!Stoping)
             {
+                ClearTasks();
+
                 TaskEx taskEx = new TaskEx(action, priority);
                 tasks.Add(taskEx);
                 waitHandle.Set();

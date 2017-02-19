@@ -16,9 +16,18 @@ namespace Usable
         }
 
         /// <summary>
+        /// Инициализация.
+        /// </summary>
+        /// <param name="Value"></param>
+        public void Init(Tp1 Value)
+        {
+            _ValueLast = Value;
+        }
+
+        /// <summary>
         /// Вычисление выходного значения.
         /// </summary>
-        public bool CalculateRet(Tp1 Value)
+        public bool Calculate(Tp1 Value)
         {
             if (_ValueLast != null && _ValueLast.Equals(Value)) return false;
             _ValueLast = Value;
@@ -28,7 +37,7 @@ namespace Usable
         /// <summary>
         /// Вычисление выходного значения с сохранением предыдующего значения.
         /// </summary>
-        public bool CalculateWithLastRet(Tp1 Value)
+        public bool CalculateWithLast(Tp1 Value)
         {
             if (_ValueLast != null && _ValueLast.Equals(Value)) return false;
             _ValueLastLast = _ValueLast;
